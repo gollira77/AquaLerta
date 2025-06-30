@@ -1,9 +1,9 @@
 <?php
 include 'config.php'; 
 
-// Consulta para obtener todas las alertas 
+// Consulta para obtener todas las alertas (pendientes, activas, rechazadas, resueltas)
 // Ordenadas por fecha/hora para ver las más recientes primero
-$sql = "SELECT id, descripcion, latitud, longitud, fecha_hora, estado, nivel_riesgo, zona_geografica FROM alertas ORDER BY fecha_hora DESC";
+$sql = "SELECT id, descripcion, latitud, longitud, fecha_hora, estado, nivel_riesgo, zona_geografica FROM alertas ORDER BY fecha_hora DESC"; 
 $result = $conn->query($sql);
 
 ?>
@@ -32,41 +32,69 @@ $result = $conn->query($sql);
         th {
             background-color: #f2f2f2;
         }
+        
+        /* Contenedor flexible para los botones de acción */
+        .action-buttons {
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 5px; 
+            justify-content: flex-start; 
+            align-items: center; 
+        }
+        .action-buttons form {
+            margin: 0; 
+        }
+
+        /* Estilos de los botones */
         .btn-confirmar {
             background-color: #28a745; 
             color: white;
             border: none;
-            padding: 5px 10px;
+            padding: 4px 8px; 
             cursor: pointer;
             border-radius: 4px;
-            margin-bottom: 5px;
+            font-size: 0.85em; 
+            white-space: nowrap; 
         }
         .btn-descartar {
             background-color: #dc3545; 
             color: white;
             border: none;
-            padding: 5px 10px;
+            padding: 4px 8px;
             cursor: pointer;
             border-radius: 4px;
-            margin-bottom: 5px;
+            font-size: 0.85em;
+            white-space: nowrap;
         }
         .btn-editar {
             background-color: #007bff; 
             color: white;
             border: none;
-            padding: 5px 10px;
+            padding: 4px 8px;
             cursor: pointer;
             border-radius: 4px;
-            margin-bottom: 5px;
+            font-size: 0.85em;
+            white-space: nowrap;
         }
         .btn-resolver {
             background-color: #6c757d; 
             color: white;
             border: none;
-            padding: 5px 10px;
+            padding: 4px 8px;
             cursor: pointer;
             border-radius: 4px;
-            margin-bottom: 5px;
+            font-size: 0.85em;
+            white-space: nowrap;
+        }
+        .btn-eliminar {
+            background-color: #ffc107; 
+            color: black;
+            border: none;
+            padding: 4px 8px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 0.85em;
+            white-space: nowrap;
         }
     </style>
 </head>
@@ -79,7 +107,7 @@ $result = $conn->query($sql);
         <p>Aquí puedes ver, validar, editar y cerrar todas las alertas.</p>
 
         <?php
-        // Mostrar mensajes de estado 
+        // Mostrar mensajes de estado (éxito/error)
         if (isset($_GET['status'])) {
             if ($_GET['status'] == 'success') {
                 echo '<div class="alert alert-success" role="alert">¡Operación exitosa! Alerta ' . htmlspecialchars($_GET['action']) . '.</div>';
@@ -103,39 +131,47 @@ $result = $conn->query($sql);
                 echo "<td>" . $row["estado"]. "</td>";
                 echo "<td>" . $row["nivel_riesgo"]. "</td>"; // Mostrar nivel de riesgo
                 echo "<td>" . htmlspecialchars($row["zona_geografica"]). "</td>"; // Mostrar zona geográfica
-                echo "<td>";
+                echo "<td>"; // Celda de acciones
+
+                echo "<div class='action-buttons'>"; // Contenedor flexible para los botones
 
                 // Botones de Confirmar/Descartar solo si el estado es 'pendiente'
                 if ($row["estado"] == 'pendiente') {
-                    echo "<form action='actualizar_estado_alerta.php' method='POST' style='display:inline-block; margin-right: 5px;'>";
+                    echo "<form action='actualizar_estado_alerta.php' method='POST'>";
                     echo "<input type='hidden' name='id_alerta' value='" . $row["id"] . "'>";
                     echo "<input type='hidden' name='nuevo_estado' value='activa'>";
                     echo "<button type='submit' class='btn-confirmar'>Confirmar</button>";
                     echo "</form>";
-                    echo "<form action='actualizar_estado_alerta.php' method='POST' style='display:inline-block;'>";
+                    echo "<form action='actualizar_estado_alerta.php' method='POST'>";
                     echo "<input type='hidden' name='id_alerta' value='" . $row["id"] . "'>";
                     echo "<input type='hidden' name='nuevo_estado' value='rechazada'>";
                     echo "<button type='submit' class='btn-descartar'>Descartar</button>";
                     echo "</form>";
                 } 
                 
-                // Botones de Editar y Resolver para alertas activas (o incluso pendientes/rechazadas si se quisiera reabrir)
-                if ($row["estado"] == 'activa' || $row["estado"] == 'pendiente' || $row["estado"] == 'rechazada') {
-                    echo "<form action='editar_alerta.php' method='GET' style='display:inline-block; margin-right: 5px;'>";
-                    echo "<input type='hidden' name='id_alerta' value='" . $row["id"] . "'>";
-                    echo "<button type='submit' class='btn-editar'>Editar</button>";
-                    echo "</form>";
-                }
+                // Botón de Editar (ahora visible para CUALQUIER estado, eliminando la condición if)
+                echo "<form action='editar_alerta.php' method='GET'>";
+                echo "<input type='hidden' name='id_alerta' value='" . $row["id"] . "'>";
+                echo "<button type='submit' class='btn-editar'>Editar</button>";
+                echo "</form>";
                 
                 // Botón de Marcar como Resuelta solo si la alerta no está ya resuelta
                 if ($row["estado"] != 'resuelta') {
-                    echo "<form action='actualizar_estado_alerta.php' method='POST' style='display:inline-block;'>";
+                    echo "<form action='actualizar_estado_alerta.php' method='POST'>";
                     echo "<input type='hidden' name='id_alerta' value='" . $row["id"] . "'>";
                     echo "<input type='hidden' name='nuevo_estado' value='resuelta'>";
                     echo "<button type='submit' class='btn-resolver'>Marcar Resuelta</button>";
                     echo "</form>";
                 }
-                echo "</td>";
+
+                // Botón de Eliminar (disponible para CUALQUIER estado)
+                echo "<form action='eliminar_alerta.php' method='POST' onsubmit='return confirm(\"¿Estás seguro de que quieres eliminar esta alerta? Esta acción es irreversible.\");'>";
+                echo "<input type='hidden' name='id_alerta' value='" . $row["id"] . "'>";
+                echo "<button type='submit' class='btn-eliminar'>Eliminar</button>";
+                echo "</form>";
+
+                echo "</div>"; // Cierra el contenedor de botones
+                echo "</td>"; // Cierra la celda de acciones
                 echo "</tr>";
             }
             echo "</tbody>";
