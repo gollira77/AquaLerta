@@ -21,6 +21,8 @@
                   <li class="nav-item">
                 <a class="nav-link" href="reportes.php">Reportes Ciudadanos</a>
             </li>
+              <li class="nav-item">
+                    <a class="nav-link" href="gestion_usuarios.php">Gestión Usuarios</a> </li>
              <li class="nav-item">
                     <a class="nav-link" href="logout.php">Cerrar Sesión</a> </li>
             </ul>
