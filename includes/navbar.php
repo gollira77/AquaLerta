@@ -18,7 +18,10 @@
                 <li class="nav-item">
                     <a class="nav-link" href="panel_alertas.php">Alertas Activas</a>
                 </li>
-                </ul>
+                  <li class="nav-item">
+                <a class="nav-link" href="reportes.php">Reportes Ciudadanos</a>
+            </li>
+            </ul>
         </div>
     </div>
 </nav>
