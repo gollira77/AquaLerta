@@ -1,0 +1,162 @@
+:root {
+        --primary-dark-blue: #1a237e;
+        --accent-blue: #4285f4;
+        --light-text: #f0f4f8;
+        --hover-underline-color: #f0f4f8;
+        --body-bg-color: #eef2f6;
+        --card-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Estilos Generales del Cuerpo */
+    body {
+        background-color: var(--body-bg-color);
+        font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        padding-top: 70px;
+        margin: 0;
+        box-sizing: border-box;
+    }
+
+    /* Contenedor principal del contenido */
+    .main-content-wrapper {
+        padding-bottom: 30px;
+    }
+
+    /* Estilos de Encabezados (h3) */
+    h3 {
+        font-weight: 700;
+        color: #0056b3;
+        margin-bottom: 1rem;
+        border-bottom: 2px solid #007bff;
+        padding-bottom: 0.5rem;
+    }
+
+    /* Estilos de Tarjetas (Card) */
+    .card {
+        box-shadow: var(--card-shadow);
+        border-radius: 12px;
+        border: 1px solid #dee2e6;
+        overflow: hidden;
+    }
+
+    .card-body {
+        padding: 2.5rem;
+    }
+
+    /* Estilos de Listas dentro de la Tarjeta */
+    .card-body ul {
+        list-style: none;
+        padding-left: 0;
+        margin-top: 1.5rem;
+    }
+
+    .card-body ul li {
+        margin-bottom: 1rem;
+        padding-left: 1.8rem;
+        position: relative;
+        font-size: 1.05rem;
+        color: #444;
+    }
+
+    .card-body ul li::before {
+        content: '\f00c';
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        color: #28a745;
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+    .card-body ul li:not([class*="fa"])::before {
+        content: '\2714';
+        font-family: 'Arial', sans-serif;
+        font-weight: bold;
+        color: #28a745;
+    }
+
+    .card-body img {
+        max-width: 100%;
+        height: auto;
+        display: block; /* Asegura que cada imagen ocupe su propia línea por defecto */
+        margin-bottom: 1.5rem; /* Espacio entre imágenes apiladas */
+    }
+
+    /* Alineación de los CONTENEDORES .row de cada sección */
+    /* Por defecto, los grupos de imágenes estarán a la izquierda */
+    .card-body > h3 + hr + .row {
+        justify-content: flex-start !important; /* Alinea los grupos a la izquierda */
+    }
+
+    /* Alineación del GRUPO de imágenes "Durante una Inundación" a la derecha */
+    /* Usamos nth-of-type(1) para el segundo h3 (que es 'Durante una Inundación' si 'EN CASA' está antes) */
+    .card-body > h3.mt-4:nth-of-type(1) + hr + .row { 
+        justify-content: flex-end !important;
+        
+    }
+
+    /* CONVERTIR EL CONTENEDOR DE IMÁGENES 'ANTES' A FLEXBOX para control granular de antes2.png */
+    @media (min-width: 768px) { /* SOLO en pantallas medianas y grandes */
+        .card-body > h3:first-of-type + hr + .row > .col-md-8 {
+            display: flex; /* Hacemos que el col-md-8 sea un contenedor flex */
+            flex-direction: row; /* Los items intentan ponerse en fila */
+            flex-wrap: wrap; /* Permite que los items bajen a la siguiente línea si no hay espacio */
+            align-items: flex-start; /* Alinea los items al inicio del eje transversal */
+            /* No necesitamos justify-content aquí si manejamos con auto margins y widths */
+        }
+
+        /* Estilo para las imágenes dentro del contenedor flex de la sección 'Antes' */
+        .card-body > h3:first-of-type + hr + .row > .col-md-8 > img {
+            flex-shrink: 0; /* No encoger las imágenes */
+            flex-grow: 0;  /* No estirar las imágenes */
+            /* Si quieres que antes1 y antes3 estén una al lado de la otra con antes2 en la misma fila a la derecha: */
+            /* width: 45%; /* Ejemplo: Si quieres 2 imágenes por fila, ajusta el ancho */
+            /* margin-bottom: 1rem; /* Ajusta el margen si las pones en fila */
+        }
+        
+        /* Alinear la imagen antes2.png con margen exacto en pantallas grandes */
+        .card-body > h3:first-of-type + hr + .row > .col-md-8 > img[src="assets/img/antes2.png"] {
+            margin-left: auto; /* Empuja antes2 a la derecha del todo dentro de su línea/fila */
+            margin-right: 150px !important; /* <--- ¡AQUÍ AJUSTA EL VALOR EN PX para moverla desde la DERECHA! */
+                                 /* Puedes probar 0px si quieres que quede pegada al borde derecho del col-md-8 */
+                                 /* O un valor positivo para separarla del borde derecho */
+                                 /* O un valor negativo para que sobresalga (si el contenedor no tiene overflow: hidden) */
+            order: 1; /* Esto ayuda a que, en el contexto flex, se posicione después de otros elementos,
+                         pero visualmente margin-left: auto ya hace el trabajo de moverla a la derecha. */
+        }
+    }
+
+
+    /* Media queries para dispositivos pequeños (sm y xs) */
+    @media (max-width: 767.98px) { 
+        .card-body {
+            padding: 1.5rem;
+        }
+        h3 {
+            font-size: 1.5rem;
+        }
+        /* En móvil, los grupos de imágenes se centran. Esto es lo que causó el centrado general. */
+        .card-body > h3 + hr + .row {
+            justify-content: center !important; /* Mantiene los grupos centrados en móvil */
+        }
+        /* Para la sección 'Antes', el contenedor de imágenes vuelve a display: block en móvil */
+        .card-body > h3:first-of-type + hr + .row > .col-md-8 {
+            display: block; /* Deshabilita flexbox para que las imágenes se apilen */
+        }
+        /* La imagen antes2.png se centra también en móvil */
+        .card-body > h3:first-of-type + hr + .row > .col-md-8 > img[src="assets/img/antes2.png"] {
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+        }
+    }
+
+    /* Estilos para el Pie de Página (Footer) */
+    footer {
+        background-color: #f8f9fa;
+        color: #6c757d;
+        font-size: 0.9rem;
+        border-top: 1px solid #e9ecef;
+        padding: 1.5rem 0;
+        text-align: center;
+    }

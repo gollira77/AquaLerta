@@ -3,20 +3,15 @@ require_once 'funciones.php';
 redirect_if_not_logged_in();
 if (get_user_role() != 'medio') die('Acceso denegado');
 
-// Mostrar mensajes de éxito o error
 $mensaje = "";
 
-// Eliminar alerta (cualquier medio puede)
 if (isset($_GET['eliminar']) && is_numeric($_GET['eliminar'])) {
     $alerta_id = intval($_GET['eliminar']);
-    // Chequear si la alerta existe
     $stmt_check = $pdo->prepare("SELECT COUNT(*) FROM alertas WHERE id = ?");
     $stmt_check->execute([$alerta_id]);
     if ($stmt_check->fetchColumn() > 0) {
-        // Eliminar participaciones de rescatistas
         $stmt2 = $pdo->prepare("DELETE FROM rescatistas_alerta WHERE alerta_id = ?");
         $stmt2->execute([$alerta_id]);
-        // Eliminar la alerta
         $stmt = $pdo->prepare("DELETE FROM alertas WHERE id = ?");
         $stmt->execute([$alerta_id]);
         $mensaje = "<div class='alert alert-success'>Alerta eliminada correctamente.</div>";
@@ -25,7 +20,6 @@ if (isset($_GET['eliminar']) && is_numeric($_GET['eliminar'])) {
     }
 }
 
-// Crear alerta (solo añade alerta con tu usuario)
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $titulo = $_POST['titulo'];
     $descripcion = $_POST['descripcion'];
@@ -36,7 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     exit;
 }
 
-// Listar todas las alertas (no solo las propias)
 $stmt = $pdo->query("SELECT * FROM alertas ORDER BY fecha DESC");
 $alertas = $stmt->fetchAll();
 ?>

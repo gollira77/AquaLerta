@@ -1,51 +1,39 @@
 <?php
-// Incluir el archivo de configuración para la conexión a la BD
 include 'config.php'; 
 
-// Verificar que la solicitud sea POST 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     $descripcion = isset($_POST['descripcion']) ? htmlspecialchars(trim($_POST['descripcion'])) : '';
     $latitud = isset($_POST['latitud']) && $_POST['latitud'] !== '' ? floatval($_POST['latitud']) : null;
     $longitud = isset($_POST['longitud']) && $_POST['longitud'] !== '' ? floatval($_POST['longitud']) : null;
 
-    // Validaciones básicas: Asegurarse de que la descripción no esté vacía
     if (empty($descripcion)) {
-        echo "Error: La descripción no puede estar vacía.";
-        exit; // Detener la ejecución si hay un error
+        echo "Error: La descripción de la alerta no puede estar vacía.";
+        exit; 
     }
 
-    // Determinar la zona geográfica 
-    $zona_geografica = "Zona Desconocida";
-    if ($latitud !== null && $longitud !== null) {
-        $zona_geografica = "Formosa (Coord: " . $latitud . ", " . $longitud . ")";
-    }
+    $titulo = "Reporte de alerta - " . substr($descripcion, 0, 50) . "..."; 
+    $id_zona = 1; 
 
-    $stmt = $conn->prepare("INSERT INTO alertas (descripcion, latitud, longitud, estado, nivel_riesgo, zona_geografica) VALUES (?, ?, ?, 'pendiente', 'bajo', ?)");
-
-    // Verificar si la preparación de la consulta fue exitosa
-    if ($stmt === false) {
-        echo "Error al preparar la consulta: " . $conn->error;
+    if (!isset($_SESSION['user_id'])) {
+        $emitida_por = 0; 
+        echo "Error: Se requiere un usuario logueado para reportar alertas.";
         exit;
     }
+    $emitida_por = $_SESSION['user_id'];
 
-    // Vincular los parámetros a la consulta preparada
-    $stmt->bind_param("sdds", $descripcion, $latitud, $longitud, $zona_geografica);
+    $nivel_riesgo = 'bajo'; 
 
-    // Ejecutar la consulta preparada
-    if ($stmt->execute()) {
-        // La alerta se guardó en la base de datos
+    $activa = 1; 
+
+    $stmt = $pdo->prepare("INSERT INTO alertas (titulo, descripcion, nivel_riesgo, fecha_hora, id_zona, emitida_por, activa) VALUES (?, ?, ?, NOW(), ?, ?, ?)");
+    
+    try {
+        $stmt->execute([$titulo, $descripcion, $nivel_riesgo, $id_zona, $emitida_por, $activa]);
         echo "success"; 
-    } else {
-        // Error al ejecutar la consulta
-        echo "Error al guardar la alerta: " . $stmt->error;
+    } catch (\PDOException $e) {
+        echo "Error al guardar la alerta: " . $e->getMessage();
     }
-
-    // Cerrar la sentencia preparada
-    $stmt->close();
-
-    // Cerrar la conexión a la base de datos
-    $conn->close();
 
 } else {
     echo "Acceso denegado: Este script solo acepta solicitudes POST.";

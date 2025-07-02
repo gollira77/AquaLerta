@@ -1,7 +1,7 @@
 <?php
 // Configuración de la base de datos
 $host = 'localhost';
-$db   = 'alertas_db';
+$db   = 'aqualerta';
 $user = 'root';
 $pass = '';
 $charset = 'utf8mb4';
@@ -13,7 +13,7 @@ $options = [
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
 try {
-     $pdo = new PDO($dsn, $user, $pass, $options);
+    $pdo = new PDO($dsn, $user, $pass, $options);
 } catch (\PDOException $e) {
     throw new \PDOException($e->getMessage(), (int)$e->getCode());
 }
