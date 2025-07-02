@@ -1,17 +1,21 @@
 <?php
-// Datos de conexión a la base de datos
-$servername = "localhost"; 
-$username = "root";        
-$password = "";           
-$dbname = "aqualerta_bd";  
-// Crear la conexión a la base de datos
-$conn = new mysqli($servername, $username, $password, $dbname);
+// Configuración de la base de datos
+$host = 'localhost';
+$db   = 'alertas_db';
+$user = 'root';
+$pass = '';
+$charset = 'utf8mb4';
 
-// Verificar si la conexión fue exitosa
-if ($conn->connect_error) {
-    die("Conexión fallida a la base de datos: " . $conn->connect_error);
+$options = [
+    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+];
+
+$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+try {
+     $pdo = new PDO($dsn, $user, $pass, $options);
+} catch (\PDOException $e) {
+    throw new \PDOException($e->getMessage(), (int)$e->getCode());
 }
-
-$conn->set_charset("utf8mb4");
-
+session_start();
 ?>

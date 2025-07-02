@@ -1,0 +1,29 @@
+.bg-gradient {
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%) !important;
+  min-height: 100vh;
+}
+.bg-slate {
+  background: #f1f5f9 !important;
+}
+.text-primary, .navbar-brand, .display-5, .text-primary-emphasis {
+  color: #1e3a8a !important;
+}
+.bg-primary, .btn-primary, .navbar, .card-header {
+  background-color: #1e3a8a !important;
+  border-color: #1e3a8a !important;
+}
+.btn-primary {
+  color: #fff !important;
+}
+.btn-primary:hover, .btn-primary:focus {
+  background-color: #2563eb !important;
+  border-color: #2563eb !important;
+}
+a.text-primary { text-decoration: underline; }
+.bg-info { background-color: #bfdbfe !important; }
+.rounded-4 { border-radius: 1.25rem !important; }
+.shadow-lg { box-shadow: 0 6px 24px rgba(30,58,138,0.15) !important; }
+.alerta-card {
+  border-left: 5px solid #3b82f6;
+  background: #f8fafd !important;
+}
