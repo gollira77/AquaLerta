@@ -1,0 +1,182 @@
+/* Colores y Variables (mantenerlas para fácil edición) */
+:root {
+    --primary-dark-blue: #1a237e; /* Azul oscuro profundo para el navbar */
+    --accent-blue: #4285f4; /* Azul vibrante para el botón */
+    --light-text: #f0f4f8; /* Blanco suave para el texto general en fondos oscuros */
+    --hover-underline-color: #f0f4f8; /* Color del subrayado */
+    --body-bg-color: #eef2f6; /* Fondo suave para el cuerpo */
+    --card-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilos Generales del Cuerpo */
+body {
+    background-color: var(--body-bg-color);
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    /* Para compensar el fixed-top navbar */
+    padding-top: 70px; /* Ajusta este valor si tu navbar tiene una altura diferente */
+}
+
+/* Wrapper para el contenido principal (alternativa al padding-top en body) */
+/* Si usas esto, quita el padding-top del body */
+/* .main-content-wrapper {
+    padding-top: 70px; 
+} */
+
+
+/* Estilos de Encabezados (h3) */
+h3 {
+    font-weight: 700;
+    color: #0056b3; /* Un azul de Bootstrap */
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 0.5rem;
+}
+
+/* Estilos de Tarjetas (Card) */
+.card {
+    box-shadow: var(--card-shadow);
+    border-radius: 12px;
+    border: 1px solid #dee2e6;
+    overflow: hidden; /* Importante para bordes redondeados */
+}
+
+.card-body {
+    padding: 2.5rem;
+}
+
+/* Estilos de Listas dentro de la Tarjeta */
+.card-body ul {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 1.5rem;
+}
+
+.card-body ul li {
+    margin-bottom: 1rem;
+    padding-left: 1.8rem;
+    position: relative;
+    font-size: 1.05rem;
+    color: #444;
+}
+
+.card-body ul li::before {
+    /* Usando Font Awesome para un icono más profesional */
+    content: '\f00c'; /* Unicode para un checkmark sólido de Font Awesome 5 Free */
+    font-family: 'Font Awesome 5 Free'; /* Asegúrate de que Font Awesome esté enlazado */
+    font-weight: 900; /* Necesario para los íconos sólidos de Font Awesome */
+    color: #28a745; /* Verde para el checkmark */
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+/* Fallback para el checkmark si Font Awesome no está disponible/cargado */
+.card-body ul li:not([class*="fa"])::before {
+    content: '\2714'; /* Unicode checkmark más robusto */
+    font-family: 'Arial', sans-serif; /* Fuente genérica para el símbolo */
+    font-weight: bold;
+    color: #28a745;
+}
+
+/* ESTILOS PARA EL NAVBAR */
+
+.navbar {
+    background-color: var(--primary-dark-blue) !important; /* Usar !important para asegurar que sobrescriba Bootstrap */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding-top: 0.8rem;
+    padding-bottom: 0.8rem;
+    /* fixed-top ya lo posiciona, no necesitas position: sticky si usas fixed-top */
+    z-index: 1030; /* Valor por defecto de Bootstrap para fixed-top */
+}
+
+/* Clase personalizada para el fondo oscuro del navbar */
+.bg-primary-dark {
+    background-color: var(--primary-dark-blue) !important;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.8rem;
+    color: var(--light-text) !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.navbar-nav {
+    /* Bootstrap ya maneja flexbox para navbar-nav */
+    /* ms-auto en el HTML se encarga de empujar a la derecha */
+}
+
+/* Enlaces del Navbar */
+.nav-link {
+    font-weight: 500;
+    color: var(--light-text) !important;
+    margin-right: 25px; /* Espaciado entre enlaces */
+    position: relative;
+    padding-bottom: 5px; /* Espacio para el subrayado */
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.nav-link:hover {
+    color: var(--accent-blue) !important;
+    transform: translateY(-2px);
+}
+
+/* Subrayado para el enlace activo y al pasar el ratón */
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 3px;
+    background-color: var(--hover-underline-color);
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+    width: 100%;
+}
+
+/* Estilos para el botón de Iniciar Sesión */
+.navbar .btn-primary {
+    background-color: var(--accent-blue);
+    border-color: var(--accent-blue);
+    font-weight: 600;
+    padding: 0.5rem 1.5rem;
+    border-radius: 25px;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    margin-left: 10px; /* Espacio a la izquierda del botón en escritorio */
+}
+
+.navbar .btn-primary:hover {
+    background-color: #357ae8; /* Tono más oscuro al pasar el ratón */
+    border-color: #357ae8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.navbar .btn-primary:focus {
+    box-shadow: 0 0 0 0.25rem rgba(66, 133, 244, 0.5);
+}
+
+/* Ajustes responsivos para el botón cuando el menú está colapsado (móvil) */
+@media (max-width: 991.98px) { /* Hasta el breakpoint 'lg' */
+    .navbar-collapse .nav-item .btn-primary {
+        margin-top: 10px; /* Espacio superior cuando está apilado */
+        margin-left: 0; /* Elimina margen izquierdo en móvil */
+        width: 100%; /* Botón ocupa todo el ancho disponible */
+        text-align: center; /* Centra el texto del botón */
+    }
+}
+
+
+/* Estilos para el Pie de Página (Footer) */
+footer {
+    background-color: #f8f9fa;
+    color: #6c757d;
+    font-size: 0.9rem;
+    border-top: 1px solid #e9ecef;
+    padding: 1.5rem 0;
+}
